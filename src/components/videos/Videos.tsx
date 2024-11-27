@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
+import { toast, toastConfig } from 'react-simple-toasts'
 import { firestore } from '../../config/firebase'
 import { pc } from '../../config/webrtc'
 import {
@@ -16,6 +17,9 @@ import {
 import HangupIcon from '../../assets/svg/hangup.svg?react'
 import CopyIcon from '../../assets/svg/copy.svg?react'
 import './Videos.css'
+import 'react-simple-toasts/dist/style.css'
+
+toastConfig({ theme: 'dark' })
 
 export function Videos() {
   const { roomId } = useParams()
@@ -173,7 +177,7 @@ export function Videos() {
           onClick={() => {
             const url = `${window.location.origin}/join/${joinCode}`
             navigator.clipboard.writeText(url)
-            alert(`URL copied to clipboard: ${url}`)
+            toast('Join URL copied to clipboard')
           }}
           className="copy button">
           <CopyIcon />
