@@ -93,7 +93,7 @@ export function Videos() {
           }
         })
       })
-    } else if (location.pathname === '/join' && roomId) {
+    } else if (location.pathname.includes('/join') && roomId) {
       const callDoc = doc(firestore, 'calls', roomId)
       const answerCandidates = collection(callDoc, 'answerCandidates')
       const offerCandidates = collection(callDoc, 'offerCandidates')
@@ -105,9 +105,16 @@ export function Videos() {
       }
 
       const callSnapshot = await getDoc(callDoc)
+
+      if (!callSnapshot.exists()) {
+        navigate('/')
+        toast(`No call with ID: ${roomId}`)
+        return
+      }
+
       const callData = callSnapshot.data()
 
-      const offerDescription = callData?.offer
+      const offerDescription = callData.offer
       await pc.setRemoteDescription(new RTCSessionDescription(offerDescription))
 
       const answerDescription = await pc.createAnswer()
@@ -169,8 +176,10 @@ export function Videos() {
       <div className="buttonsContainer">
         <button
           onClick={hangUp}
+          type="button"
           disabled={!webcamActive}
-          className="hangup button">
+          className="hangup button"
+          title="Hang up">
           <HangupIcon />
         </button>
         <button
@@ -179,7 +188,9 @@ export function Videos() {
             navigator.clipboard.writeText(url)
             toast('Join URL copied to clipboard')
           }}
-          className="copy button">
+          type="button"
+          className="copy button"
+          title="Copy join URL">
           <CopyIcon />
         </button>
       </div>
@@ -187,12 +198,17 @@ export function Videos() {
       {!webcamActive && (
         <div className="modalContainer">
           <div className="modal">
-            <h3>Turn on your camera and microphone and start the call</h3>
+            <h3>Turn on your camera and microphone to start the call</h3>
             <div className="container">
-              <button onClick={() => navigate('/')} className="secondary">
+              <button
+                onClick={() => navigate('/')}
+                type="button"
+                className="secondary">
                 Cancel
               </button>
-              <button onClick={setupSources}>Start</button>
+              <button onClick={setupSources} type="button">
+                Start
+              </button>
             </div>
           </div>
         </div>

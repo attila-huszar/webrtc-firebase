@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import toast from 'react-simple-toasts'
 import './Menu.css'
 
 export function Menu() {
@@ -9,7 +10,9 @@ export function Menu() {
   return (
     <div className="home">
       <div className="create box">
-        <button onClick={() => navigate('/create')}>Create Call</button>
+        <button onClick={() => navigate('/create')} type="button">
+          Create Call
+        </button>
       </div>
       <div className="answer box">
         <input
@@ -17,7 +20,17 @@ export function Menu() {
           onChange={(e) => setJoinCode(e.target.value)}
           placeholder="Join with code"
         />
-        <button onClick={() => navigate(`/join/${joinCode}`)}>Answer</button>
+        <button
+          onClick={() => {
+            if (!joinCode) {
+              toast('Please enter a code')
+              return
+            }
+            navigate(`/join/${joinCode}`)
+          }}
+          type="button">
+          Answer
+        </button>
       </div>
     </div>
   )
