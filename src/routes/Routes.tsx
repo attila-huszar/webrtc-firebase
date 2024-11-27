@@ -1,6 +1,7 @@
 import {
-  RouterProvider,
   createBrowserRouter,
+  Navigate,
+  RouterProvider,
   type RouteObject,
 } from 'react-router'
 import { Menu, Videos } from '../components'
@@ -23,7 +24,7 @@ const routes: RouteObject[] = [
       },
       {
         path: '*',
-        element: <Menu />,
+        element: <Navigate to="/" replace />,
       },
     ],
   },
